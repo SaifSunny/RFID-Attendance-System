@@ -111,19 +111,25 @@ if (isset($_POST['submit'])) {
 
                 <li>
                     <a href="admin_teachers.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-user-tie" style="padding-right:12px;"></i>
+                    <i class="fa-solid fa-user-tie" style="padding-right:18px;"></i>
                         Manage Faculty
                     </a>
                 </li>
                 <li>
                     <a href="admin_devices.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-computer" style="padding-right:12px;"></i>
                         Manage Devices
                     </a>
                 </li>
                 <li>
+                    <a href="admin_classes.php" class="nav-link text-white" style="font-size:17px;">
+                        <i class="fa-solid fa-hourglass-half" style="padding-right:18px;"></i>
+                        Manage Classes
+                    </a>
+                </li>
+                <li>
                     <a href="admin_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:12px;"></i>
+                        <i class="fa-solid fa-users" style="padding-right:10px;"></i>
                         Manage Students
                     </a>
                 </li>
@@ -162,7 +168,7 @@ if (isset($_POST['submit'])) {
                         <h5 class="card-title" style="font-family:poppins;color:black;font-size:18px">Departments</h5>
                         <div class="card-body" style="text-align:center; font-size:15px;">
                             <?php
-                                    $sql = "SELECT * from departments where dep_id <> 1";
+                                    $sql = "SELECT * from departments";
                                     $result = mysqli_query($conn, $sql);
                                     $row_cnt = $result->num_rows;
                                 ?>
@@ -178,7 +184,7 @@ if (isset($_POST['submit'])) {
                         <h5 class="card-title" style="font-family:poppins;color:black;font-size:20px">Courses</h5>
                         <div class="card-body" style="text-align:center; font-size:18px;">
                             <?php
-                                    $sql = "SELECT * from courses where course_id <> 1";
+                                    $sql = "SELECT * from courses";
                                     $result = mysqli_query($conn, $sql);
                                     $row_cnt = $result->num_rows;
                                 ?>
@@ -195,7 +201,7 @@ if (isset($_POST['submit'])) {
                         </h5>
                         <div class="card-body" style="text-align:center; font-size:18px;">
                             <?php
-                                    $sql = "SELECT * from teachers where teacher_id <> 1";
+                                    $sql = "SELECT * from teachers";
                                     $result = mysqli_query($conn, $sql);
                                     $row_cnt = $result->num_rows;
                                 ?>
@@ -211,7 +217,7 @@ if (isset($_POST['submit'])) {
                         </h5>
                         <div class="card-body" style="text-align:center; font-size:18px;">
                             <?php
-                                    $sql = "SELECT * from students where sl <> 1";
+                                    $sql = "SELECT * from students";
                                     $result = mysqli_query($conn, $sql);
                                     $row_cnt = $result->num_rows;
                                 ?>
@@ -254,6 +260,7 @@ if (isset($_POST['submit'])) {
 
                                 <tbody style="font-size:18px">
                                     <?php 
+                                    $sl=0;
                                             $sql = "SELECT * FROM semester where sem_id <>1";
                                             $result = mysqli_query($conn, $sql);
                                             if($result){
@@ -262,9 +269,12 @@ if (isset($_POST['submit'])) {
                                                     $sem_name=$row['sem_name'];
                                                     $sem_year=$row['sem_year'];
                                                     $sem_code=$row['sem_code'];
+
+                                                    $sl++;
+
                                         ?>
                                     <tr style="vertical-align:middle;">
-                                        <td><?php echo $sem_id ?></td>
+                                        <td><?php echo $sl ?></td>
                                         <td><?php echo $sem_code ?></td>
                                         <td><?php echo $sem_name ?></td>
                                         <td><?php echo $sem_year ?></td>

@@ -73,7 +73,7 @@ if (isset($_POST['submit'])) {
 
 
     <section class="d-flex">
-        <div class="header d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+    <div class="header d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
             <a href="" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
                 style="padding:5px 30px;font-family: 'rubik'; font-size:22px; font-weight:600; padding-top:20px">
                 RFID Attendance
@@ -95,32 +95,38 @@ if (isset($_POST['submit'])) {
                 </li>
                 <li>
                     <a href="admin_programs.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
                         Manage Programs
                     </a>
                 </li>
                 <li>
                     <a href="admin_courses.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-book" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-book" style="padding-right:18px;"></i>
                         Manage Courses
                     </a>
                 </li>
 
                 <li>
                     <a href="admin_teachers.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-user-tie" style="padding-right:12px;"></i>
+                    <i class="fa-solid fa-user-tie" style="padding-right:18px;"></i>
                         Manage Faculty
                     </a>
                 </li>
                 <li>
                     <a href="admin_devices.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-computer" style="padding-right:12px;"></i>
                         Manage Devices
                     </a>
                 </li>
                 <li>
+                    <a href="admin_classes.php" class="nav-link text-white" style="font-size:17px;">
+                        <i class="fa-solid fa-hourglass-half" style="padding-right:18px;"></i>
+                        Manage Classes
+                    </a>
+                </li>
+                <li>
                     <a href="admin_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:12px;"></i>
+                        <i class="fa-solid fa-users" style="padding-right:10px;"></i>
                         Manage Students
                     </a>
                 </li>
@@ -170,7 +176,7 @@ if (isset($_POST['submit'])) {
                         <div style="padding:20px; text-align:center;font-size:18px;">
                             <table class="table" style="font-size: 14px;color:#222;">
                                 <thead>
-                                    <th>Department ID</th>
+                                    <th>sl</th>
                                     <th>Department Code</th>
                                     <th>Department Name</th>
                                     <th>Department Initial</th>
@@ -179,6 +185,8 @@ if (isset($_POST['submit'])) {
 
                                 <tbody style="font-size:18px">
                                     <?php 
+                                            $sl=0;
+
                                             $sql = "SELECT * FROM departments where dep_id <> 1";
                                             $result = mysqli_query($conn, $sql);
                                             if($result){
@@ -187,9 +195,11 @@ if (isset($_POST['submit'])) {
                                                     $dep_name=$row['dep_name'];
                                                     $dep_code=$row['dep_code'];
                                                     $dep_init=$row['dep_init'];
+
+                                                    $sl++;
                                         ?>
                                     <tr style="vertical-align:middle;">
-                                        <td><?php echo $dep_id ?></td>
+                                        <td><?php echo $sl ?></td>
                                         <td><?php echo $dep_code ?></td>
                                         <td><?php echo $dep_name ?></td>
                                         <td><?php echo $dep_init ?></td>

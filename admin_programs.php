@@ -91,32 +91,38 @@ if (isset($_POST['submit'])) {
                 <li>
                     <a href="admin_programs.php" class="nav-link active" aria-current="page"
                         style="background:#fc6806;font-size:17px;">
-                        <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
                         Manage Programs
                     </a>
                 </li>
                 <li>
                     <a href="admin_courses.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-book" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-book" style="padding-right:18px;"></i>
                         Manage Courses
                     </a>
                 </li>
 
                 <li>
                     <a href="admin_teachers.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-user-tie" style="padding-right:12px;"></i>
+                    <i class="fa-solid fa-user-tie" style="padding-right:18px;"></i>
                         Manage Faculty
                     </a>
                 </li>
                 <li>
                     <a href="admin_devices.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-computer" style="padding-right:12px;"></i>
                         Manage Devices
                     </a>
                 </li>
                 <li>
+                    <a href="admin_classes.php" class="nav-link text-white" style="font-size:17px;">
+                        <i class="fa-solid fa-hourglass-half" style="padding-right:18px;"></i>
+                        Manage Classes
+                    </a>
+                </li>
+                <li>
                     <a href="admin_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:12px;"></i>
+                        <i class="fa-solid fa-users" style="padding-right:10px;"></i>
                         Manage Students
                     </a>
                 </li>
@@ -152,7 +158,7 @@ if (isset($_POST['submit'])) {
                 </div>
             </div>
 
-            <div class="alert alert-<?php echo $cls;?>" >
+            <div class="alert alert-<?php echo $cls;?>">
                 <?php 
                     if (isset($_POST['submit'])){
                         echo $error;
@@ -166,7 +172,7 @@ if (isset($_POST['submit'])) {
                         <div style="padding:20px; text-align:center;font-size:18px;">
                             <table class="table" style="font-size: 14px;color:#222;">
                                 <thead>
-                                    <th>Program ID</th>
+                                    <th>sl</th>
                                     <th>Program Name</th>
                                     <th>Program Initial</th>
                                     <th>Department</th>
@@ -175,6 +181,8 @@ if (isset($_POST['submit'])) {
 
                                 <tbody style="font-size:18px">
                                     <?php 
+                                            $sl=0;
+
                                             $sql = "SELECT * FROM program where prog_id <> 1";
                                             $result = mysqli_query($conn, $sql);
                                             if($result){
@@ -188,13 +196,16 @@ if (isset($_POST['submit'])) {
                                                     $result1 = mysqli_query($conn, $sql1);
                                                     $row1=mysqli_fetch_assoc($result1);
                                                     $dep_init = $row1['dep_init'];
+
+                                                    $sl++;
                                         ?>
                                     <tr style="vertical-align:middle;">
-                                        <td><?php echo $prog_id ?></td>
+                                        <td><?php echo $sl ?></td>
                                         <td><?php echo $prog_name ?></td>
                                         <td><?php echo $prog_init ?></td>
                                         <td><?php echo $dep_init ?></td>
-                                        <td style="font-size:14px; font-weight:600;"><a href="admin_program_delete.php?prog_id=<?php echo $prog_id?>"
+                                        <td style="font-size:14px; font-weight:600;"><a
+                                                href="admin_program_delete.php?prog_id=<?php echo $prog_id?>"
                                                 style="border-radius: 10px; padding:12px 14px; font-size:10px; font-weight:600"
                                                 class="btn btn-danger"><i class="fa fa-trash"
                                                     style="font-size:14px"></i></a></td>
@@ -228,7 +239,7 @@ if (isset($_POST['submit'])) {
                                         <select class="form-control" id="select_dep" name="select_dep" required>
                                             <option value="">-- Select Department --</option>
                                             <?php
-                                                $br_option = "SELECT * FROM departments";
+                                                $br_option = "SELECT * FROM departments where dep_id <>1";
                                                 $br_option_run = mysqli_query($conn, $br_option);
 
                                                 if (mysqli_num_rows($br_option_run) > 0) {

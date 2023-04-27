@@ -25,6 +25,17 @@ if (isset($_POST['submit'])) {
     $credit = $_POST['credit'];
     $dep_id = $_POST['select_dep'];
     $prog_id = $_POST['select_prog'];
+    $description = $_POST['description'];
+
+    $name = $_FILES['file']['name'];
+    $target_dir = "img/courses/";
+    $target_file = $target_dir . basename($_FILES["file"]["name"]);
+
+    // Select file type
+    $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+  
+    // Valid file extensions
+    $extensions_arr = array("jpg","jpeg","png","gif");
 
     $query = "SELECT * FROM courses WHERE course_name = '$course_name'";
     $query_run = mysqli_query($conn, $query);
@@ -33,17 +44,35 @@ if (isset($_POST['submit'])) {
         $query = "SELECT * FROM courses WHERE course_code = '$course_code'";
         $query_run = mysqli_query($conn, $query);
         if (!$query_run->num_rows > 0) {
-            $query2 = "INSERT INTO courses(course_name, course_code, credit, dep_id, prog_id)
-            VALUES ('$course_name','$course_code','$credit', '$dep_id','$prog_id')";
-            $query_run2 = mysqli_query($conn, $query2);
-            if ($query_run2) {
-                $cls="success";
-                $error = 'Course Successfully ADDED.';
-                
-            } else {
+            // Check extension
+            if( in_array($imageFileType,$extensions_arr) ){
+
+                // Upload file
+                if(move_uploaded_file($_FILES['file']['tmp_name'],$target_dir.$name)){
+            
+                    // Convert to base64 
+                    $image_base64 = base64_encode(file_get_contents('img/courses/'.$name));
+                    $image = 'data:image/'.$imageFileType.';base64,'.$image_base64;
+
+                    $query2 = "INSERT INTO courses(course_img, course_name, course_code, credit, dep_id, prog_id, `description`)
+                    VALUES ('$name','$course_name','$course_code','$credit', '$dep_id','$prog_id','$description')";
+                    $query_run2 = mysqli_query($conn, $query2);
+                    if ($query_run2) {
+                        $cls="success";
+                        $error = 'Course Successfully ADDED.';
+                        
+                    } else {
+                        $cls="danger";
+                        $error = 'Cannot save Course';
+                        
+                    }
+                }else{
+                    $cls="danger";
+                    $error = 'Unknown Error Occurred.';
+                }
+            }else{
                 $cls="danger";
-                $error = 'Cannot save Course';
-                
+                $error = 'Invalid File Type';
             }
         }
         else{
@@ -81,7 +110,7 @@ if (isset($_POST['submit'])) {
 
 
     <section class="d-flex">
-        <div class="header d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+    <div class="header d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
             <a href="" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
                 style="padding:5px 30px;font-family: 'rubik'; font-size:22px; font-weight:600; padding-top:20px">
                 RFID Attendance
@@ -102,37 +131,42 @@ if (isset($_POST['submit'])) {
                 </li>
                 <li>
                     <a href="admin_programs.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
                         Manage Programs
                     </a>
                 </li>
                 <li>
-                    <a href="admin_courses.php" class="nav-link active" aria-current="page"
+                    <a href="admin_courses.php" class="nav-link  active" aria-current="page"
                         style="background:#fc6806;font-size:17px;">
-                        <i class="fa-solid fa-book" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-book" style="padding-right:18px;"></i>
                         Manage Courses
                     </a>
                 </li>
 
                 <li>
                     <a href="admin_teachers.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-user-tie" style="padding-right:12px;"></i>
+                    <i class="fa-solid fa-user-tie" style="padding-right:18px;"></i>
                         Manage Faculty
                     </a>
                 </li>
                 <li>
                     <a href="admin_devices.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
+                    <i class="fa-solid fa-computer" style="padding-right:12px;"></i>
                         Manage Devices
                     </a>
                 </li>
                 <li>
+                    <a href="admin_classes.php" class="nav-link text-white" style="font-size:17px;">
+                        <i class="fa-solid fa-hourglass-half" style="padding-right:18px;"></i>
+                        Manage Classes
+                    </a>
+                </li>
+                <li>
                     <a href="admin_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:12px;"></i>
+                        <i class="fa-solid fa-users" style="padding-right:10px;"></i>
                         Manage Students
                     </a>
                 </li>
-                
             </ul>
             <hr>
             <div class="dropdown">
@@ -161,7 +195,7 @@ if (isset($_POST['submit'])) {
                 </div>
                 <div class="col-md-2" style="margin-top:20px">
                     <a href="" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
-                    Course</a>
+                        Course</a>
                 </div>
             </div>
 
@@ -213,9 +247,9 @@ if (isset($_POST['submit'])) {
                                                     $prog_init = $row2['prog_init'];
                                         ?>
                                     <tr style="vertical-align:middle;">
-                                    <td><img src="./img/courses/<?php echo $course_img?>" style="width:90px;"
-                                    alt="profile">
-                                <span style="padding-left:20px;"></span></td>
+                                        <td><img src="./img/courses/<?php echo $course_img?>" style="width:90px;"
+                                                alt="profile">
+                                            <span style="padding-left:20px;"></span></td>
                                         <td><?php echo $course_code ?></td>
                                         <td><?php echo $course_name ?></td>
                                         <td><?php echo $credit ?></td>
@@ -241,22 +275,22 @@ if (isset($_POST['submit'])) {
 
         <!-- Add Semester Modal -->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Add Course</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="" method="POST">
+                        <form action="" method="POST" enctype='multipart/form-data'>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" style="padding:10px">
                                         <label style="padding-bottom:10px;">Department</label>
                                         <select class="form-control" id="select_dep" name="select_dep" required>
                                             <option value="">-- Select Department --</option>
                                             <?php
-                                                $br_option = "SELECT * FROM departments";
+                                                $br_option = "SELECT * FROM departments where dep_id <> 1";
                                                 $br_option_run = mysqli_query($conn, $br_option);
 
                                                 if (mysqli_num_rows($br_option_run) > 0) {
@@ -271,15 +305,13 @@ if (isset($_POST['submit'])) {
                                         </select>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" style="padding:10px">
                                         <label style="padding-bottom:10px;">Program</label>
                                         <select class="form-control" id="select_prog" name="select_prog" required>
                                             <option value="">-- Select Program --</option>
                                             <?php
-                                                $br_option = "SELECT * FROM program";
+                                                $br_option = "SELECT * FROM program where prog_id <> 1";
                                                 $br_option_run = mysqli_query($conn, $br_option);
 
                                                 if (mysqli_num_rows($br_option_run) > 0) {
@@ -295,30 +327,46 @@ if (isset($_POST['submit'])) {
                                     </div>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Course Name</label>
-                                        <input type="text" class="form-control" name="course_name" id="course_name"
-                                            placeholder="Course Name" required>
+                                        <label style="padding-bottom:10px;">Course Image</label>
+                                        <input type="file" name="file" class="form-control">
                                     </div>
+                            
                                 </div>
+                                <div class="col-md-6">
+                                        <div class="form-group" style="padding:10px">
+                                            <label style="padding-bottom:10px;">Course Name</label>
+                                            <input type="text" class="form-control" name="course_name" id="course_name"
+                                                placeholder="Course Name" required>
+                                        </div>
+                                    </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" style="padding:10px">
                                         <label style="padding-bottom:10px;">Course Code</label>
                                         <input type="text" class="form-control" name="course_code" id="course_code"
                                             placeholder="Course Code" required>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                     <div class="form-group" style="padding:10px">
                                         <label style="padding-bottom:10px;">Course Credit</label>
                                         <input type="text" class="form-control" name="credit" id="credit"
                                             placeholder="Course Credit" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" style="padding:10px">
+                                        <label style="padding-bottom:10px;">Course Description</label>
+                                        <textarea class="form-control" name="description" id="description"
+                                            placeholder="Course Description" rows="5" required></textarea>
                                     </div>
                                 </div>
                             </div>

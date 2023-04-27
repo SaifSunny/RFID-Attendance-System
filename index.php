@@ -30,7 +30,6 @@
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li><a class="dropdown-item" href="admin_login.php">Admin</a></li>
                                 <li><a class="dropdown-item" href="teacher_login.php">Teachers</a></li>
-                                <li><a class="dropdown-item" href="student_login.php">Students</a></li>
                             </ul>
                         </div>
                     </div>
