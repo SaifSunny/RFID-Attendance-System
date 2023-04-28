@@ -2,7 +2,6 @@
 include_once("./database/config.php");
 
 session_start();
-
 $username = $_SESSION['teachername'];
 
 if (!isset($_SESSION['teachername'])) {
@@ -20,6 +19,37 @@ $_SESSION['teacher_id'] = $row['teacher_id'];
 $_SESSION['username'] = $row['username'];
 
 $teacher_id= $row['teacher_id'];
+$class_id = $_GET['class_id'];
+
+if (isset($_POST['submit'])) {
+    $stu_uni_id = $_POST['student_uni_id'];
+
+    $query = "SELECT * FROM students WHERE stu_uni_id = '$stu_uni_id'";
+    $query_run = mysqli_query($conn, $query);
+    $row10=mysqli_fetch_assoc($query_run);
+    $student_id = $row10['student_id'];
+
+    $query8 = "SELECT * FROM class_students WHERE class_id = '$class_id' AND student_id = '$student_id'";
+    $query_run8 = mysqli_query($conn, $query8);
+    if (!$query_run8->num_rows > 0) {
+
+            $query2 = "INSERT INTO class_students(class_id, student_id)
+            VALUES ('$class_id','$student_id')";
+            $query_run2 = mysqli_query($conn, $query2);
+            if ($query_run2) {
+                $cls="success";
+                $error = 'Student Successfully ADDED.';
+                
+            } else {
+                $cls="danger";
+                $error = 'Cannot Add Student';
+            }
+
+    } else {
+        $cls="danger";
+        $error = 'Student Already Exists';
+    }
+}
 
 
 ?>
@@ -99,77 +129,119 @@ $teacher_id= $row['teacher_id'];
 
         <div class="main">
             <div class="row">
-                <div class="col-md-12" style="padding-bottom:30px;">
-                    <h2 style="font-weight:600">Course Students</h2>
-                    <p><a href="teacher_home.php">Dashboard</a> / <a href="teacher_home.php">My Courses</a> / Course Students</p>
+                <div class="col-md-10" style="padding-bottom:30px;">
+                    <h2 style="font-weight:600">Student List</h2>
+                    <p><a href="teacher_home.php">Dashboard</a> / <a href="teacher_courses.php">My Courses</a> / <a
+                            href="teacher_course_details.php?class_id=<?php echo $class_id?>">Course Details</a> /
+                        Student List</p>
+                </div>
+                <div class="col-md-2" style="margin-top:20px">
+                    <a href="" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Add
+                        Student</a>
                 </div>
             </div>
 
-            <div class="row" style="padding-top:0px;margin-bottom:40px;">
+            <div class="row" style="margin-bottom:0px;">
                 <div class="col-md-12">
                     <div style="text-align:center;padding:0px 0px; height:500px;">
-                        <div class="row align-items-start py-2">
-                            <div class="col-lg-12">
-                                <div class="row">
+
+                        <div style="padding:20px; text-align:center;font-size:18px;">
+                            <table class="table" style="font-size: 14px;color:#222;">
+                                <thead>
+                                    <th>Student ID</th>
+                                    <th>Image</th>
+                                    <th>Student Name</th>
+                                    <th>Gender</th>
+                                    <th>Birthday</th>
+                                    <th>Email</th>
+                                    <th>Contact</th>
+                                    <th>Address</th>
+                                    <th>Action</th>
+                                </thead>
+
+                                <tbody style="font-size:18px">
                                     <?php 
-                                        $sql = "SELECT * FROM devices where teacher_id=$teacher_id";
-                                        $result = mysqli_query($conn, $sql);
-                                        if($result){
-                                        while($row=mysqli_fetch_assoc($result)){
-                                            $course_id=$row['course_id'];
-                                            
-                                            $sql1 = "SELECT * FROM courses where course_id=$course_id";
-                                            $result1 = mysqli_query($conn, $sql1);
-                                            $row1=mysqli_fetch_assoc($result1);
-                                            $course_img=$row1['course_img'];
-                                            $course_name=$row1['course_name'];
-                                            $course_code=$row1['course_code'];
-                                            $dep_id=$row1['dep_id'];
-                                            $description=$row1['description'];
+                                            $sql = "SELECT * FROM class_students where class_id=$class_id";
+                                            $result = mysqli_query($conn, $sql);
+                                            if($result){
+                                                while($row=mysqli_fetch_assoc($result)){
+                                                    $student_id=$row['student_id'];
 
-                                            $sql2 = "SELECT * FROM departments where dep_id=$dep_id";
-                                            $result2 = mysqli_query($conn, $sql2);
-                                            $row2=mysqli_fetch_assoc($result2);
-                                            $dep_name=$row2['dep_name'];
+                                                    $sql1 = "SELECT * FROM students where student_id=$student_id";
+                                                    $result1 = mysqli_query($conn, $sql1);
+                                                    $row1=mysqli_fetch_assoc($result1);
 
-                                    ?>
-                                    <div class="col-md-4">
-                                        <div class="card">
-                                            <a href="teacher_student_list.php?course_id=<?php echo $id?>"><img
-                                                    src="img/courses/<?php echo $course_img?>" class="card-img-top"
-                                                    alt="..." style="height:200px; object-fit:cover"></a>
-                                            <div class="card-body" style="padding:30px">
-                                                <p style="font-size:15px"><i
-                                                        class="fa fa-book text-success"></i>&nbsp;&nbsp;
-                                                    <?php echo $dep_name?>
+                                                    $stu_uni_id=$row1['stu_uni_id'];
+                                                    $student_img=$row1['student_img'];
+                                                    $firstname=$row1['firstname'];
+                                                    $lastname=$row1['lastname'];
+                                                    $email=$row1['email'];
+                                                    $gender=$row1['gender'];
+                                                    $birthday=$row1['birthday'];
+                                                    $contact=$row1['contact'];
+                                                    $card_uid=$row1['card_uid'];
+                                                    $address=$row1['address']." ".$row1['city']." ".$row1['zip'];
 
-
-
-                                                    <h5 class="card-title"><a
-                                                            href="ngo_blog_details.php?blog_id=<?php echo $id?>"
-                                                            style="color:black"><?php echo $course_name." (".$course_code.")"?></a>
-                                                    </h5>
-                                                    <p class="card-text"><?php echo substr($description, 0, 100)?></p>
-                                                    <a href="ngo_blog_details.php?blog_id=<?php echo $id?>"
-                                                        class="btn btn-success">View Student List</a>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                        ?>
+                                    <tr style="vertical-align:middle;">
+                                        <td><?php echo $stu_uni_id ?></td>
+                                        <td><img src="./img/students/<?php echo $student_img?>"
+                                                style="width:80px; height:80px; object-fit:cover;" alt="profile">
+                                        <td><?php echo $firstname." ".$lastname ?></td>
+                                        <td><?php echo $gender ?></td>
+                                        <td><?php echo $birthday ?></td>
+                                        <td><?php echo $email ?></td>
+                                        <td><?php echo $contact ?></td>
+                                        <td><?php echo $address ?></td>
+                                        <td style="font-size:14px; font-weight:600;"><a
+                                                href="teacher_student_delete.php?student_id=<?php echo $student_id?>"
+                                                style="border-radius: 10px; padding:12px 14px; font-size:10px; font-weight:600"
+                                                class="btn btn-danger"><i class="fa fa-trash"
+                                                    style="font-size:14px"></i></a></td>
+                                    </tr>
                                     <?php 
+                                                }
                                             }
-                                        }
-                                    ?>
-                                </div>
-                            </div>
-
-
+                                        ?>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+
+        <!-- Add Semester Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+            style="margin-top:10%">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Student</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="margin: 10px 0">
+                        <form action="" method="POST" enctype='multipart/form-data'>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group" style="padding:10px">
+                                        <label style="padding-bottom:10px;">Sudent ID</label>
+                                        <input type="text" class="form-control" name="student_uni_id" id="student_uni_id"
+                                            placeholder="Sudent ID" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end" style="padding-top:20px;">
+                                <button type="submit" name="submit" class="btn btn-success"
+                                    style="margin-right:10px;">Add Student</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"

@@ -246,7 +246,7 @@ if (isset($_POST['submit'])) {
 
                                 <tbody style="font-size:18px">
                                     <?php 
-                                            $sql = "SELECT * FROM teachers where teacher_id <> 1";
+                                            $sql = "SELECT * FROM teachers";
                                             $result = mysqli_query($conn, $sql);
                                             if($result){
                                                 while($row=mysqli_fetch_assoc($result)){

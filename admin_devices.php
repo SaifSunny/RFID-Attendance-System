@@ -22,6 +22,7 @@ $_SESSION['username'] = $row['username'];
 if (isset($_POST['submit'])) {
     
     $dep_id = $_POST['dep_id'];
+    $device_name = $_POST['device_name'];
 
 
     $token = random_bytes(8);

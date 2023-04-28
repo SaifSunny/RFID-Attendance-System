@@ -7,7 +7,6 @@ $query = "DELETE FROM students WHERE student_id='$student_id'";
 $query_run = mysqli_query($conn, $query);
     if ($query_run) {
       echo "<script> 
-      alert('Student has been DELETED.');
       window.location.href='admin_students.php';
       </script>";
       

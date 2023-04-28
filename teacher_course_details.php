@@ -148,88 +148,27 @@ $dep_name=$row2['dep_name'];
                                 <p class="card-text"><?php echo $description?></p>
                             </div>
                             <div class="py-3">
-
-                                <a href="teacher_add_student.php?blog_id=<?php echo $id?>" class="btn btn-primary">Add
-                                    Student</a>
-
-                                <a href="ngo_blog_details.php?blog_id=<?php echo $id?>" class="btn btn-success">Take
+                                <a href="teacher_course_students.php?class_id=<?php echo $class_id?>" class="btn btn-primary">Student
+                                    List</a>
+                                <a href="teacher_attendance.php?class_id=<?php echo $class_id?>" class="btn btn-success">Take
                                     Attandance</a>
-
-                                    
-                                <a href="ngo_blog_details.php?blog_id=<?php echo $id?>" class="btn btn-warning">Archive Course</a>
+                                <a href="teacher_archive.php?class_id=<?php echo $class_id?>" class="btn btn-warning">Archive
+                                    Course</a>
                             </div>
                             <hr>
-
                             <div>
-                                <div class="row" style="padding-top:10px">
-                                    <div class="col-md-8">
-                                        <h5 style="">Student Attendance</h5>
+                                <div class="row" style="padding-top:30px">
+                                    <div class="col-md-6 pt-2">
+                                        <h5 style="">Class Attendance</h5>
                                     </div>
-
+                                    <div class="col-md-6 d-flex">
+                                    </div>
                                 </div>
                                 <hr>
                                 <div class="row" style="margin-bottom:0px;">
                                     <div class="col-md-12">
                                         <div style="text-align:center;padding:0px 0px; height:500px;">
 
-                                            <div style="padding:20px; text-align:center;font-size:18px;">
-                                                <table class="table" style="font-size: 14px;color:#222;">
-                                                    <thead>
-                                                        <th>ID</th>
-                                                        <th>Image</th>
-                                                        <th>Student Name</th>
-                                                        <th>Birthday</th>
-                                                        <th>Email</th>
-                                                        <th>Contact</th>
-                                                        <th>Address</th>
-                                                        <th>Action</th>
-                                                    </thead>
-
-                                                    <tbody style="font-size:18px">
-                                                        <?php 
-                                                            $sql = "SELECT * FROM class_student where class_id = $class_id";
-                                                            $result = mysqli_query($conn, $sql);
-                                                            if($result){
-                                                                while($row=mysqli_fetch_assoc($result)){
-
-                                                                    $student_id=$row['student_id'];
-                                                                    
-                                                                    $sql2= "SELECT * FROM students where student_id=$student_id";
-                                                                    $result2 = mysqli_query($conn, $sql2);
-                                                                    $row2=mysqli_fetch_assoc($result2);
-
-                                                                    $student_img=$row['student_img'];
-                                                                    $firstname=$row['firstname'];
-                                                                    $lastname=$row['lastname'];
-                                                                    $email=$row['email'];
-                                                                    $birthday=$row['birthday'];
-                                                                    $contact=$row['contact'];
-                                                                    $address=$row['address']." ".$row['city']." ".$row['zip'];
-
-                                                        ?>
-                                                        <tr style="vertical-align:middle;">
-                                                            <td><?php echo $student_id ?></td>
-                                                            <td><img src="./img/students/<?php echo $student_img?>"
-                                                                    style="width:80px; height:80px; object-fit:cover;"
-                                                                    alt="profile">
-                                                            <td><?php echo $firstname." ".$lastname ?></td>
-                                                            <td><?php echo $birthday ?></td>
-                                                            <td><?php echo $email ?></td>
-                                                            <td><?php echo $contact ?></td>
-                                                            <td><?php echo $address ?></td>
-                                                            <td style="font-size:14px; font-weight:600;"><a
-                                                                    href="admin_student_delete.php?student_id=<?php echo $student_id?>"
-                                                                    style="border-radius: 10px; padding:12px 14px; font-size:10px; font-weight:600"
-                                                                    class="btn btn-danger"><i class="fa fa-trash"
-                                                                        style="font-size:14px"></i></a></td>
-                                                        </tr>
-                                                        <?php 
-                                                                }
-                                                            }
-                                                        ?>
-                                                    </tbody>
-                                                </table>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

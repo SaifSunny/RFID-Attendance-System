@@ -34,16 +34,31 @@ $_SESSION['username'] = $row['username'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js" integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/sidebars.css">
 
+    <script>
+        function fetchStudentData() {
+            $.ajax({
+                url: 'fetch_student_data.php',
+                success: function(data) {
+                    $('#student-list').html(data);
+                }
+            });
+        }
+        $(document).ready(function() {
+            fetchStudentData();
+            setInterval(fetchStudentData, 2000);
+        });
+    </script>
 </head>
 
 <body>
 
 
     <section class="d-flex">
-    <div class="header d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
+        <div class="header d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 280px;">
             <a href="" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none"
                 style="padding:5px 30px;font-family: 'rubik'; font-size:22px; font-weight:600; padding-top:20px">
                 RFID Attendance
@@ -64,39 +79,39 @@ $_SESSION['username'] = $row['username'];
                 </li>
                 <li>
                     <a href="admin_programs.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
+                        <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
                         Manage Programs
                     </a>
                 </li>
                 <li>
                     <a href="admin_courses.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-book" style="padding-right:18px;"></i>
+                        <i class="fa-solid fa-book" style="padding-right:18px;"></i>
                         Manage Courses
                     </a>
                 </li>
 
                 <li>
                     <a href="admin_teachers.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-user-tie" style="padding-right:18px;"></i>
+                        <i class="fa-solid fa-user-tie" style="padding-right:12px;"></i>
                         Manage Faculty
                     </a>
                 </li>
                 <li>
                     <a href="admin_devices.php" class="nav-link text-white" style="font-size:17px;">
-                    <i class="fa-solid fa-computer" style="padding-right:12px;"></i>
+                        <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
                         Manage Devices
                     </a>
                 </li>
                 <li>
                     <a href="admin_classes.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-hourglass-half" style="padding-right:18px;"></i>
+                        <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
                         Manage Classes
                     </a>
                 </li>
                 <li>
                     <a href="admin_students.php" class="nav-link active" aria-current="page"
                         style="background:#fc6806;font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:10px;"></i>
+                        <i class="fa-solid fa-users" style="padding-right:12px;"></i>
                         Manage Students
                     </a>
                 </li>
@@ -127,7 +142,7 @@ $_SESSION['username'] = $row['username'];
                     <p><a href="admin_home.php">Dashboard</a> / Students</p>
                 </div>
                 <div class="col-md-2" style="margin-top:20px">
-                    
+
                 </div>
             </div>
 
@@ -145,52 +160,19 @@ $_SESSION['username'] = $row['username'];
                         <div style="padding:20px; text-align:center;font-size:18px;">
                             <table class="table" style="font-size: 14px;color:#222;">
                                 <thead>
-                                    <th>ID</th>
+                                    <th>Student ID</th>
                                     <th>Image</th>
                                     <th>Student Name</th>
+                                    <th>Gender</th>
                                     <th>Birthday</th>
                                     <th>Email</th>
                                     <th>Contact</th>
                                     <th>Address</th>
+                                    <th>Card UID</th>
                                     <th>Action</th>
                                 </thead>
 
-                                <tbody style="font-size:18px">
-                                    <?php 
-                                            $sql = "SELECT * FROM students where student_id <> 1";
-                                            $result = mysqli_query($conn, $sql);
-                                            if($result){
-                                                while($row=mysqli_fetch_assoc($result)){
-                                                    $student_id=$row['student_id'];
-                                                    $student_img=$row['student_img'];
-                                                    $firstname=$row['firstname'];
-                                                    $lastname=$row['lastname'];
-                                                    $email=$row['email'];
-                                                    $birthday=$row['birthday'];
-                                                    $contact=$row['contact'];
-                                                    $address=$row['address']." ".$row['city']." ".$row['zip'];
-
-                                        ?>
-                                    <tr style="vertical-align:middle;">
-                                        <td><?php echo $student_id ?></td>
-                                        <td><img src="./img/students/<?php echo $student_img?>"
-                                                style="width:80px; height:80px; object-fit:cover;" alt="profile">
-                                        <td><?php echo $firstname." ".$lastname ?></td>
-                                        <td><?php echo $birthday ?></td>
-                                        <td><?php echo $email ?></td>
-                                        <td><?php echo $contact ?></td>
-                                        <td><?php echo $address ?></td>
-                                        <td style="font-size:14px; font-weight:600;"><a
-                                                href="admin_student_delete.php?student_id=<?php echo $student_id?>"
-                                                style="border-radius: 10px; padding:12px 14px; font-size:10px; font-weight:600"
-                                                class="btn btn-danger"><i class="fa fa-trash"
-                                                    style="font-size:14px"></i></a></td>
-                                    </tr>
-                                    <?php 
-                                                }
-                                            }
-                                        ?>
-                                </tbody>
+                                <tbody id="student-list" style="font-size:18px"></tbody>
                             </table>
                         </div>
                     </div>
@@ -198,148 +180,14 @@ $_SESSION['username'] = $row['username'];
             </div>
         </div>
 
-        <!-- Add Semester Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Student</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="POST" enctype='multipart/form-data'>
-                            <div class="row">
-                            <div class="col-md-12">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Profile Image</label>
-                                        <input type="file" name="file" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">First Name</label>
-                                        <input type="text" class="form-control" name="firstname" id="firstname"
-                                            placeholder="First Name" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Last Name</label>
-                                        <input type="text" class="form-control" name="lastname" id="lastname"
-                                            placeholder="Last Name" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">NID Number</label>
-                                        <input type="text" class="form-control" name="nid" id="nid"
-                                            placeholder="NID Number" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Education</label>
-                                        <input type="text" class="form-control" name="education" id="education"
-                                            placeholder="Education" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Gender</label>
-                                        <select class="form-control" name="gender" id="gender" placeholder="Gender"
-                                            required>
-                                            <option>-- Select Gender --</option>
-                                            <option value="Male">Male</option>
-                                            <option value="Female">Female</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Birthday</label>
-                                        <input type="date" class="form-control" name="birthday" id="birthday"
-                                            placeholder="Birthday" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Contact</label>
-                                        <input type="text" class="form-control" name="contact" id="contact"
-                                            placeholder="Contact" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Email</label>
-                                        <input type="text" class="form-control" name="email" id="email"
-                                            placeholder="Email" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Address</label>
-                                        <input type="text" class="form-control" name="address" id="address"
-                                            placeholder="Address" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">City</label>
-                                        <input type="text" class="form-control" name="city" id="city" placeholder="City"
-                                            required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Zip</label>
-                                        <input type="text" class="form-control" name="zip" id="zip" placeholder="Zip"
-                                            required>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Username</label>
-                                        <input type="text" class="form-control" name="username" id="username"
-                                            placeholder="Username" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group" style="padding:10px">
-                                        <label style="padding-bottom:10px;">Password</label>
-                                        <input type="text" class="form-control" name="password" id="password"
-                                            placeholder="Password" required>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end" style="padding-top:10px;">
-                                <button type="submit" name="submit" class="btn btn-success"
-                                    style="margin-right:10px;">Add Student</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <script src="js/sidebars.js"></script>
+
+
 </body>
 
 </html>
