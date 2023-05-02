@@ -86,12 +86,7 @@ $dep_name=$row2['dep_name'];
                         My Courses
                     </a>
                 </li>
-                <li>
-                    <a href="teacher_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:18px;"></i>
-                        My Students
-                    </a>
-                </li>
+
                 <li>
                     <a href="teacher_archieved.php" class="nav-link text-white" style="font-size:17px;">
                         <i class="fa-solid fa-graduation-cap" style="padding-right:18px;"></i>
@@ -148,11 +143,14 @@ $dep_name=$row2['dep_name'];
                                 <p class="card-text"><?php echo $description?></p>
                             </div>
                             <div class="py-3">
-                                <a href="teacher_course_students.php?class_id=<?php echo $class_id?>" class="btn btn-primary">Student
+                                <a href="teacher_course_students.php?class_id=<?php echo $class_id?>"
+                                    class="btn btn-primary">Student
                                     List</a>
-                                <a href="teacher_attendance.php?class_id=<?php echo $class_id?>" class="btn btn-success">Take
+                                <a href="teacher_activate_device.php?class_id=<?php echo $class_id?>"
+                                    class="btn btn-success">Take
                                     Attandance</a>
-                                <a href="teacher_archive.php?class_id=<?php echo $class_id?>" class="btn btn-warning">Archive
+                                <a href="teacher_archive.php?class_id=<?php echo $class_id?>"
+                                    class="btn btn-warning">Archive
                                     Course</a>
                             </div>
                             <hr>
@@ -167,7 +165,99 @@ $dep_name=$row2['dep_name'];
                                 <hr>
                                 <div class="row" style="margin-bottom:0px;">
                                     <div class="col-md-12">
-                                        <div style="text-align:center;padding:0px 0px; height:500px;">
+                                        <div style="padding:0px 0px; height:500px;">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Student ID</th>
+                                                        <th>Student Name</th>
+                                                        <?php 
+                                                        $sql1 = "SELECT DISTINCT att_date from class_attendance";
+                                                        $result1 = mysqli_query($conn, $sql1);
+                                                        if($result1){
+                                                            while($row1=mysqli_fetch_assoc($result1)){
+
+                                                                $att_date=$row1['att_date'];
+
+                                                    ?>
+                                                        <th
+                                                            style="color:#222;writing-mode: vertical-rl;text-orientation: mixed;">
+                                                            <?php echo $att_date?></th>
+                                                        <?php
+                                                            }
+                                                        }
+                                                    ?>
+                                                        <th
+                                                            style="color:#222;writing-mode: vertical-rl;text-orientation: mixed;">
+                                                            Total Class</th>
+                                                            <th
+                                                            style="color:#222;writing-mode: vertical-rl;text-orientation: mixed;">
+                                                            Present</th>
+                                                            <th
+                                                            style="color:#222;writing-mode: vertical-rl;text-orientation: mixed;">
+                                                            Percentage</th>
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody>
+                                                    <?php 
+                                                        $sql2 = "SELECT * FROM class_students where class_id=$class_id";
+                                                        $result2 = mysqli_query($conn, $sql2);
+                                                        if($result2){
+                                                            while($row2=mysqli_fetch_assoc($result2)){
+
+                                                                $student_id=$row2['student_id'];
+
+                                                                $sql3 = "SELECT * FROM students WHERE student_id='$student_id'";
+                                                                $result3 = mysqli_query($conn, $sql3);
+                                                                $row3=mysqli_fetch_assoc($result3);
+
+                                                                $firstname=$row3['firstname'];
+                                                                $lastname=$row3['lastname'];
+                                                                $stu_uni_id=$row3['stu_uni_id'];
+
+                                                                $days_present = 0; 
+                                                                $total_days = 0; 
+                                                    ?>
+                                                    <tr style="color:#222;">
+                                                        <td><?php echo $stu_uni_id?></td>
+                                                        <td><?php echo $firstname." ".$lastname?></td>
+
+                                                        <?php 
+                                                            $sql_attendance = "SELECT * FROM class_attendance WHERE class_id=$class_id AND student_id=$student_id";
+                                                            $result_attendance = mysqli_query($conn, $sql_attendance);
+                                                            $attendance = array();
+                                                            while($row_attendance = mysqli_fetch_assoc($result_attendance)) {
+                                                                $attendance[$row_attendance['att_date']] = $row_attendance;
+                                                                $days_present++;
+                                                            }
+
+                                                            $sql_dates = "SELECT DISTINCT att_date FROM class_attendance WHERE class_id=$class_id";
+                                                            $result_dates = mysqli_query($conn, $sql_dates);
+                                                            while($row_dates=mysqli_fetch_assoc($result_dates)){
+                                                                $att_date = $row_dates['att_date'];
+                                                                $total_days++;
+                                                                if (isset($attendance[$att_date])) {
+                                                        ?>
+                                                        <td>P</td>
+                                                        <?php
+                                                                } else {
+                                                        ?>
+                                                        <td>A</td>
+                                                        <?php
+                                                                }
+                                                            }
+                                                        ?>
+                                                        <td><?php echo $total_days?></td>
+                                                        <td><?php echo $days_present?></td>
+                                                        <td><?php echo number_format(($days_present / $total_days) * 100, 2)?>%
+                                                        </td>
+                                                    </tr>
+                                                    <?php
+                                                            }
+                                                        }
+                                                    ?>
+                                                </tbody>
 
                                         </div>
                                     </div>

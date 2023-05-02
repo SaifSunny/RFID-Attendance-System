@@ -95,12 +95,7 @@ if (isset($_POST['submit'])) {
                         My Courses
                     </a>
                 </li>
-                <li>
-                    <a href="teacher_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:18px;"></i>
-                        My Students
-                    </a>
-                </li>
+
                 <li>
                     <a href="teacher_archieved.php" class="nav-link text-white" style="font-size:17px;">
                         <i class="fa-solid fa-graduation-cap" style="padding-right:18px;"></i>

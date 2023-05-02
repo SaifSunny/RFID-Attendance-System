@@ -95,8 +95,8 @@ $teacher_id= $row['teacher_id'];
         <div class="main">
             <div class="row">
                 <div class="col-md-12" style="padding-bottom:30px;">
-                    <h2 style="font-weight:600">My Courses</h2>
-                    <p><a href="teacher_home.php">Dashboard</a> / My Courses</p>
+                    <h2 style="font-weight:600">Archieved Courses</h2>
+                    <p><a href="teacher_home.php">Dashboard</a> / My Archieved</p>
                 </div>
             </div>
 
@@ -107,13 +107,12 @@ $teacher_id= $row['teacher_id'];
                             <div class="col-lg-12">
                                 <div class="row">
                                     <?php 
-                                        $sql = "SELECT * FROM class where teacher_id=$teacher_id and `archieved` = 0";
+                                        $sql = "SELECT * FROM class where teacher_id=$teacher_id and `archieved` = 1";
                                         $result = mysqli_query($conn, $sql);
                                         if($result){
                                         while($row=mysqli_fetch_assoc($result)){
                                             $class_id=$row['class_id'];
                                             $course_id=$row['course_id'];
-                                            $sem_id=$row['semester_id'];
                                             
                                             $sql1 = "SELECT * FROM courses where course_id=$course_id Limit 4";
                                             $result1 = mysqli_query($conn, $sql1);
@@ -129,11 +128,6 @@ $teacher_id= $row['teacher_id'];
                                             $row2=mysqli_fetch_assoc($result2);
                                             $dep_name=$row2['dep_name'];
 
-                                            $sql3 = "SELECT * FROM semester where sem_id=$sem_id";
-                                            $result3 = mysqli_query($conn, $sql3);
-                                            $row3=mysqli_fetch_assoc($result3);
-                                            $sem_code=$row3['sem_code'];
-
                                     ?>
                                     <div class="col-md-4">
                                         <div class="card" style="width:340px;">
@@ -141,16 +135,18 @@ $teacher_id= $row['teacher_id'];
                                                     src="img/courses/<?php echo $course_img?>" class="card-img-top"
                                                     alt="..." style="height:200px width:380px; object-fit:cover"></a>
                                             <div class="card-body" style="padding:30px">
-                                                <span class="badge text-bg-success"
-                                                    style="padding: 6px 15px;font-size:14px;margin-bottom:10px"><?php echo $sem_code?></span>
-                                                <span class="badge text-bg-success"
-                                                    style="padding: 6px 15px;font-size:14px;"><?php echo $dep_name?></span>
-                                                <h5 class="card-title"><a
-                                                        href="teacher_course_details.php?class_id=<?php echo $class_id?>"
-                                                        style="color:black"><?php echo $course_name." (".$course_code.")"?></a>
-                                                </h5>
-                                                <p class="card-text"><?php echo substr($description, 0, 110)?></p>
+                                                <p style="font-size:15px"><i
+                                                        class="fa fa-book text-success"></i>&nbsp;&nbsp;
+                                                    <?php echo $dep_name?>
 
+
+
+                                                    <h5 class="card-title"><a
+                                                            href="teacher_course_details.php?class_id=<?php echo $class_id?>"
+                                                            style="color:black"><?php echo $course_name." (".$course_code.")"?></a>
+                                                    </h5>
+                                                    <p class="card-text"><?php echo substr($description, 0, 110)?></p>
+                                                    
                                             </div>
                                         </div>
 

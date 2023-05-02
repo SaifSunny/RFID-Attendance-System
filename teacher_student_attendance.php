@@ -1,25 +1,30 @@
 <?php
 include_once("./database/config.php");
+date_default_timezone_set('Asia/Dhaka');
 
 session_start();
+$username = $_SESSION['teachername'];
 
-$username = $_SESSION['adminname'];
-
-if (!isset($_SESSION['adminname'])) {
-    header("Location: admin_login.php");
+if (!isset($_SESSION['teachername'])) {
+    header("Location: teacher_login.php");
 }
 
-$sql = "SELECT * FROM admin WHERE username='$username'";
+$sql = "SELECT * FROM teachers WHERE username='$username'";
 $result = mysqli_query($conn, $sql);
 $row=mysqli_fetch_assoc($result);
 
-$admin_img=$row['admin_img'];
+$teacher_img=$row['teacher_img'];
 
-$_SESSION['admin_img'] = $admin_img;
-$_SESSION['admin_id'] = $row['admin_id'];
+$_SESSION['teacher_img'] = $teacher_img;
+$_SESSION['teacher_id'] = $row['teacher_id'];
 $_SESSION['username'] = $row['username'];
 
+$teacher_id= $row['teacher_id'];
+$class_id = $_GET['class_id'];
 
+$d = date("Y-m-d");
+
+$newDate = date("d-m-Y", strtotime($d));  
 ?>
 
 <!doctype html>
@@ -34,18 +39,18 @@ $_SESSION['username'] = $row['username'];
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
         integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/sidebars.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"
         integrity="sha512-pumBsjNRGGqkPzKHndZMaAG+bir374sORyzM3uulLV14lN5LyykqNk8eEeUlUkB3U0M4FApyaHraT65ihJhDpQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/sidebars.css">
 
     <script>
         function fetchStudentData() {
             $.ajax({
-                url: 'fetch_student_data.php?class_id=<?php $class_id?>',
+                url: 'fetch_student_attendance.php?class_id=<?php echo $class_id?>',
                 success: function (data) {
-                    $('#student-list').html(data);
+                    $('#student-attendance').html(data);
                 }
             });
         }
@@ -68,53 +73,22 @@ $_SESSION['username'] = $row['username'];
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="admin_home.php" class="nav-link text-white" style="font-size:17px;">
+                    <a href="teacher_home.php" class="nav-link text-white" style="font-size:17px;">
                         <i class="fa-solid fa-house" style="padding-right:16px;"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="admin_departments.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-building-ngo" style="padding-right:22px;"></i>
-                        Manage Departments
-                    </a>
-                </li>
-                <li>
-                    <a href="admin_programs.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-certificate" style="padding-right:18px;"></i>
-                        Manage Programs
-                    </a>
-                </li>
-                <li>
-                    <a href="admin_courses.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-book" style="padding-right:18px;"></i>
-                        Manage Courses
-                    </a>
-                </li>
-
-                <li>
-                    <a href="admin_teachers.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-user-tie" style="padding-right:12px;"></i>
-                        Manage Faculty
-                    </a>
-                </li>
-                <li>
-                    <a href="admin_devices.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
-                        Manage Devices
-                    </a>
-                </li>
-                <li>
-                    <a href="admin_classes.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-computer" style="padding-right:18px;"></i>
-                        Manage Classes
-                    </a>
-                </li>
-                <li>
-                    <a href="admin_students.php" class="nav-link active" aria-current="page"
+                    <a href="teacher_courses.php" class="nav-link active" aria-current="page"
                         style="background:#fc6806;font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:12px;"></i>
-                        Manage Students
+                        <i class="fa-solid fa-book" style="padding-right:22px;"></i>
+                        My Courses
+                    </a>
+                </li>
+                <li>
+                    <a href="teacher_archieved.php" class="nav-link text-white" style="font-size:17px;">
+                        <i class="fa-solid fa-graduation-cap" style="padding-right:18px;"></i>
+                        Archieved Courses
                     </a>
                 </li>
             </ul>
@@ -122,7 +96,7 @@ $_SESSION['username'] = $row['username'];
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="img/admin/<?php echo $admin_img?>" alt="" width="40" height="40"
+                    <img src="img/admin/<?php echo $teacher_img?>" alt="" width="40" height="40"
                         class="rounded-circle me-2">
                     <strong><?php echo $username?></strong>
                 </a>
@@ -139,23 +113,22 @@ $_SESSION['username'] = $row['username'];
 
         <div class="main">
             <div class="row">
-                <div class="col-md-10" style="padding-bottom:0px;">
-                    <h2 style="font-weight:600">Manage Students</h2>
-                    <p><a href="admin_home.php">Dashboard</a> / Students</p>
+                <div class="col-md-10" style="padding-bottom:30px;">
+                    <h2 style="font-weight:600">Student Attendance</h2>
+                    <p><a href="teacher_home.php">Dashboard</a> / <a href="teacher_courses.php">My Courses</a> / <a
+                            href="teacher_course_details.php?class_id=<?php echo $class_id?>">Course Details</a> /
+                        Student Attendance</p>
                 </div>
                 <div class="col-md-2" style="margin-top:20px">
-
+                    <a href="teacher_deactivate_device.php?class_id=<?php echo $class_id?>" class="btn btn-danger">Deactivate
+                        Device</a>
                 </div>
             </div>
 
-            <div class="alert alert-<?php echo $cls;?>">
-                <?php 
-                    if (isset($_POST['submit'])){
-                        echo $error;
-                    }
-                ?>
-            </div>
             <div class="row" style="margin-bottom:0px;">
+                <div class="col-md-12">
+                   <h4>Date: <?php echo $newDate?></h4>
+                </div>
                 <div class="col-md-12">
                     <div style="text-align:center;padding:0px 0px; height:500px;">
 
@@ -170,26 +143,21 @@ $_SESSION['username'] = $row['username'];
                                     <th>Email</th>
                                     <th>Contact</th>
                                     <th>Address</th>
-                                    <th>Card UID</th>
-                                    <th>Action</th>
                                 </thead>
 
-                                <tbody id="student-list" style="font-size:18px"></tbody>
+                                <tbody id="student-attendance" style="font-size:18px"></tbody>
                             </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous">
     </script>
     <script src="js/sidebars.js"></script>
-
-
 </body>
 
 </html>

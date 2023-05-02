@@ -2,7 +2,7 @@
 include_once("./database/config.php");
 
 session_start();
-
+error_reporting(0);
 $username = $_SESSION['teachername'];
 
 if (!isset($_SESSION['teachername'])) {
@@ -65,12 +65,7 @@ $teacher_id= $row['teacher_id'];
                         My Courses
                     </a>
                 </li>
-                <li>
-                    <a href="teacher_students.php" class="nav-link text-white" style="font-size:17px;">
-                        <i class="fa-solid fa-users" style="padding-right:18px;"></i>
-                        My Students
-                    </a>
-                </li>
+
                 <li>
                     <a href="teacher_archieved.php" class="nav-link text-white" style="font-size:17px;">
                         <i class="fa-solid fa-graduation-cap" style="padding-right:18px;"></i>
@@ -112,7 +107,7 @@ $teacher_id= $row['teacher_id'];
                         <h5 class="card-title" style="font-family:poppins;color:black;font-size:18px">My Courses</h5>
                         <div class="card-body" style="text-align:center; font-size:15px;">
                             <?php
-                                    $sql = "SELECT * from class where teacher_id = $teacher_id and `status`=0";
+                                    $sql = "SELECT * from class where teacher_id = $teacher_id and `archieved`=0";
                                     $result = mysqli_query($conn, $sql);
                                     $row_cnt = $result->num_rows;
                                 ?>
@@ -127,7 +122,7 @@ $teacher_id= $row['teacher_id'];
                         <h5 class="card-title" style="font-family:poppins;color:black;font-size:20px">Total Credit</h5>
                         <div class="card-body" style="text-align:center; font-size:18px;">
                             <?php
-                             $sql = "SELECT * from class where teacher_id = $teacher_id and `status`=0";
+                             $sql = "SELECT * from class where teacher_id = $teacher_id and `archieved`=0";
                              $result = mysqli_query($conn, $sql);
                              if($result){
                                  while($row=mysqli_fetch_assoc($result)){
@@ -152,7 +147,7 @@ $teacher_id= $row['teacher_id'];
                         <h5 class="card-title" style="font-family:poppins;color:black;font-size:20px">Students</h5>
                         <div class="card-body" style="text-align:center; font-size:18px;">
                             <?php
-                             $sql = "SELECT * from class where teacher_id = $teacher_id and `status`=0";
+                             $sql = "SELECT * from class where teacher_id = $teacher_id and `archieved`=0";
                              $result = mysqli_query($conn, $sql);
                              if($result){
                                  while($row=mysqli_fetch_assoc($result)){
@@ -175,7 +170,7 @@ $teacher_id= $row['teacher_id'];
                         <h5 class="card-title" style="font-family:poppins;color:black;font-size:18px">Archieved Courses</h5>
                         <div class="card-body" style="text-align:center; font-size:15px;">
                             <?php
-                                    $sql = "SELECT * from class where teacher_id = $teacher_id and `status`=1";
+                                    $sql = "SELECT * from class where teacher_id = $teacher_id and `archieved`=1";
                                     $result = mysqli_query($conn, $sql);
                                     $row_cnt = $result->num_rows;
                                 ?>
@@ -202,11 +197,13 @@ $teacher_id= $row['teacher_id'];
                                 <div class="row">
                                     <?php 
 
-                                        $sql = "SELECT * FROM class where teacher_id=$teacher_id and `status` = 0 order by class_id desc";
+                                        $sql = "SELECT * FROM class where teacher_id=$teacher_id and `archieved` = 0 order by class_id desc";
                                         $result = mysqli_query($conn, $sql);
                                         if($result){
                                         while($row=mysqli_fetch_assoc($result)){
+                                            $class_id=$row['class_id'];
                                             $course_id=$row['course_id'];
+                                            $sem_id=$row['semester_id'];
                                             
                                             $sql1 = "SELECT * FROM courses where course_id=$course_id Limit 4";
                                             $result1 = mysqli_query($conn, $sql1);
@@ -222,6 +219,11 @@ $teacher_id= $row['teacher_id'];
                                             $row2=mysqli_fetch_assoc($result2);
                                             $dep_name=$row2['dep_name'];
 
+                                            $sql3 = "SELECT * FROM semester where sem_id=$sem_id";
+                                            $result3 = mysqli_query($conn, $sql3);
+                                            $row3=mysqli_fetch_assoc($result3);
+                                            $sem_code=$row3['sem_code'];
+
                                     ?>
                                     <div class="col-md-3">
                                         <div class="card">
@@ -229,8 +231,10 @@ $teacher_id= $row['teacher_id'];
                                                     src="img/courses/<?php echo $course_img?>" class="card-img-top" alt="..."
                                                     style="height:200px; object-fit:cover"></a>
                                             <div class="card-body" style="padding:30px">
-                                                <p style="font-size:15px"><i class="fa fa-book text-success"></i>&nbsp;&nbsp;
-                                                    <?php echo $dep_name?>
+                                            <span class="badge text-bg-success"
+                                                    style="padding: 6px 15px;font-size:14px;margin-bottom:10px"><?php echo $sem_code?></span>
+                                                <span class="badge text-bg-success"
+                                                    style="padding: 6px 15px;font-size:14px;"><?php echo $dep_name?></span>
 
                                                 <h5 class="card-title"><a
                                                         href="teacher_course_details.php?class_id=<?php echo $class_id?>"
