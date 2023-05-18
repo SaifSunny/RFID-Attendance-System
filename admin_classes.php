@@ -42,7 +42,7 @@ if (isset($_POST['submit'])) {
         $query_run = mysqli_query($conn, $query);
     
         if (!$query_run->num_rows > 0) {
-            $query = "SELECT * FROM class WHERE `device_id` = '$device_id' and semester_id='$semester_id'";
+            $query = "SELECT * FROM class WHERE `device_id` = '$device_id' and semester_id='$semester_id' AND `schedule_day` = '$schedule_day' and `schedule_time` = '$schedule_time' ";
             $query_run = mysqli_query($conn, $query);
         
             if (!$query_run->num_rows > 0) {

@@ -96,13 +96,13 @@ $newDate = date("d-m-Y", strtotime($d));
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="img/admin/<?php echo $teacher_img?>" alt="" width="40" height="40"
+                    <img src="img/teachers/<?php echo $teacher_img?>" alt="" width="40" height="40"
                         class="rounded-circle me-2">
                     <strong><?php echo $username?></strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu text-small shadow" aria-labelledby="dropdownUser1"
                     style="width:200px;padding:10px;">
-                    <li><a class="dropdown-item" href="admin_profile.php">Profile</a></li>
+                    <li><a class="dropdown-item" href="teacher_profile.php">Profile</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -138,11 +138,11 @@ $newDate = date("d-m-Y", strtotime($d));
                                     <th>Student ID</th>
                                     <th>Image</th>
                                     <th>Student Name</th>
-                                    <th>Gender</th>
-                                    <th>Birthday</th>
                                     <th>Email</th>
                                     <th>Contact</th>
                                     <th>Address</th>
+                                    <th>Card UID</th>
+                                    <th>Attendance Time</th>
                                 </thead>
 
                                 <tbody id="student-attendance" style="font-size:18px"></tbody>

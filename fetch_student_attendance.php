@@ -24,20 +24,25 @@ if($result){
             $email=$row['email'];
             $gender=$row['gender'];
             $birthday=$row['birthday'];
-            $contact=$row['contact'];
+            $contact=$row['contact']; 
             $card_uid=$row['card_uid'];
             $address=$row['address']." ".$row['city']." ".$row['zip'];
+
+            $sql4 = "SELECT * FROM class_attendance where student_id = $student_id AND  att_date = '$d'";
+            $result4 = mysqli_query($conn, $sql4);
+            $row4=mysqli_fetch_assoc($result4);
+            $att_time=$row4['att_time'];
+
     
             echo '<tr style="vertical-align:middle;">
                       <td>'.$stu_uni_id.'</td>
                       <td><img src="img/students/'.$student_img.'" style="width:80px; height:80px; object-fit:cover;" alt="profile"></td>
                       <td>'.$firstname.' '.$lastname.'</td>
-                      <td>'.$gender.'</td>
-                      <td>'.$birthday.'</td>
                       <td>'.$email.'</td>
                       <td>'.$contact.'</td>
                       <td>'.$address.'</td>
                       <td>'.$card_uid.'</td>
+                      <td>'.$att_time.'</td>
                   </tr>';
     
     }

@@ -77,7 +77,7 @@ $teacher_id= $row['teacher_id'];
             <div class="dropdown">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="img/admin/<?php echo $teacher_img?>" alt="" width="40" height="40"
+                    <img src="img/teachers/<?php echo $teacher_img?>" alt="" width="40" height="40"
                         class="rounded-circle me-2">
                     <strong><?php echo $username?></strong>
                 </a>
